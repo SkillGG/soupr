@@ -10,18 +10,14 @@ require("dotenv").config();
 
 require('./keep_alive.js')(); 
 
-client.on('ready', () => {
-  console.log("I'm in");
-  console.log(client.user.username);
-  FixMessage();
-});
+let DiscordReady = async _=>{
+  console.log("Ready");
+}
 
-client.on('message', msg => {
-    if (msg.content = '.TEST') {
-      //FixMessage();
-      //msg.channel.send('yo');
-    }
-    if (msg.author.id != client.user.id) {
-    //    bot.BOT(Discord, client, msg);
-    }
-});
+let DiscordMessage =  async message=>{
+
+}
+
+
+client.on('ready', DiscordReady);
+client.on('message', DiscordMessage);
