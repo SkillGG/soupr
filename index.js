@@ -13,7 +13,7 @@ const Database = require("./Mongo/mongo.js");
 require('./keep_alive.js')(); 
 
 let DiscordReady = async _=>{
-  await Database.Connect();
+  await Database.Connect().catch(_=>console.error("Error connecting to Database!"));
   console.log("Ready");
 }
 
