@@ -8,16 +8,18 @@ require("dotenv").config();
   process.exit();
 });
 
+const Database = require("./Mongo/mongo.js");
+
 require('./keep_alive.js')(); 
 
 let DiscordReady = async _=>{
+  await Database.Connect();
   console.log("Ready");
 }
 
 let DiscordMessage =  async message=>{
-
+  console.log("")
 }
-
 
 client.on('ready', DiscordReady);
 client.on('message', DiscordMessage);
