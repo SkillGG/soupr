@@ -18,6 +18,5 @@ let DiscordMessage =  async message=>{
 
 }
 
-
 client.on('ready', DiscordReady);
 client.on('message', DiscordMessage);
