@@ -1,7 +1,7 @@
 import * as Mongo from 'mongodb';
 
 interface DBAccess {
-	Connect(fun: DoOnDatabaseFn): Promise<any>,
+	Connect(mongoURI:string, fun: DoOnDatabaseFn): Promise<any>,
 }
 
 // TODO: Add MongoURI to .env
@@ -9,9 +9,9 @@ interface DBAccess {
 type DoOnDatabaseFn = (client: Mongo.MongoClient, database: Mongo.Db, collection: Mongo.Collection) => Promise<void>;
 
 export let DatabaseAccess: DBAccess = {
-	Connect: (fun: DoOnDatabaseFn) => {
+	Connect: (mongoURI: string, fun: DoOnDatabaseFn) => {
 		return new Promise(async (res, req) => {
-			const client = new Mongo.MongoClient(process.env.MongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+			const client = new Mongo.MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 			let returnData = null;
 			try {
 				await client.connect();
