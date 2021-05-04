@@ -35,7 +35,7 @@ let DiscordReady = () => {
     // connected to database!
   }).catch(err => {
     // error
-    console.log("Mongo Connection error!", err);
+    console.log("Mongo Connection error!", err.message);
   })
 }
 
