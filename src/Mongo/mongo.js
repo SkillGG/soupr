@@ -12,7 +12,7 @@ DatabaseAccess.Connect = ()=>{
 			let db = client.db("Cluster0");
 			let coll = db.collection("SoupRPG");
 		}catch(err){
-			req();
+			req(err);
 		}finally {
 			client.close();
 		}
