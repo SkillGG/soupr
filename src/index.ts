@@ -29,10 +29,11 @@ const Channels: ChannelList = {
 let DiscordReady = () => {
   // load channels to Channels
   DiscordClient.channels.fetch(Channels.Main).then(ch => { if (isTextChannel(ch)) Channels.obj.Main = ch });
-  DatabaseAccess.Connect(async (client, db, collection) => {
+  DatabaseAccess.Connect(process.env.MongoURI, async (client, db, collection) => {
     // What to do in the database
   }).then(connectData => {
     // connected to database!
+    console.log("Connected to the database!");
   }).catch(err => {
     // error
     console.log("Mongo Connection error!", err.message);
