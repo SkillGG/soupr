@@ -1,8 +1,6 @@
-var http = require('http');
-
-module.exports = ()=>{
-	http.createServer(function (req, res) {
-	  res.write("I'm alive");
-	  res.end();
-	}).listen(8080);
+import * as Express from "express";
+export default () => {
+	const app = Express();
+	app.get('/', (_req, res) => res.send('Server is up.'));
+	Express.application.listen(3000);
 }

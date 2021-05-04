@@ -1,64 +1,66 @@
-// Discord.js
-const Discord = require("discord.js");
-const client = new Discord.Client();
-
-// useful regular expressions
-const RX = require("./useful-regx.js")
-
-// .env handling
 require("dotenv").config();
-// safe Discord login (catches errors)
-(async()=>{await client.login(process.env.DISCORD_BOT_SECRET);})().catch(_=>{
-  console.error("Error logging in!", _);
-  console.error(`Failed Token: ${process.env.DISCORD_BOT_SECRET}`)
-  process.exit();
-});
+import { DiscordAPIError, Message, TextChannel } from "discord.js";
 
+// Discord.js
+import { DiscordClient, DiscordLogin, isTextChannel } from "./DiscrodLogin";
+DiscordLogin(process.env.DISCORD_BOT_SECRET)
 // get Database support
-const Database = require("./Mongo/mongo.js");
-
+import { DatabaseAccess } from "./Mongo/mongo";
 // keep alive
-require('./keep_alive.js')(); 
+import keepAlive from "./keep_alive";
+keepAlive();
+
+interface ChannelList {
+  obj: {
+    Main: TextChannel
+  }
+  Main: string
+}
 
 // Channel's IDs
-const Channels = {
-  Main:"824704601717604353"
+const Channels: ChannelList = {
+  obj: {
+    "Main": null
+  },
+  "Main": "824704601717604353"
 }
 
 // on.ready
-let DiscordReady = async _=>{
-  await Database.CheckConnectionOnStart()
-  .catch(_=>console.error("Error connecting to Database!"));
-  console.log("Ready");
+let DiscordReady = () => {
+  // load channels to Channels
+  DiscordClient.channels.fetch(Channels.Main).then(ch => { if (isTextChannel(ch)) Channels.obj.Main = ch });
+  DatabaseAccess.Connect(async (client, db, collection) => {
+    // What to do in the database
+  }).then(connectData => {
+    // connected to database!
+  }).catch(err => {
+    // error
+    console.log("Mongo Connection error!", err);
+  })
 }
 
 // on.message
-let DiscordMessage =  async message=>{
-
+let DiscordMessage = async (message: Message) => {
   // if on main and not bot
-  if(message.channel.id === Channels.Main && message.author.id !== client.user.id){
+  if (message.channel.id === Channels.Main && message.author.id !== DiscordClient.user.id) {
     let msg = message.content;
     // check command
     let rx = /^!(.+?)([\S:]?(.*?))?$/; // !<name>[[ :]<arguments>]
     let rxMatch;
-    
-    if(rxMatch = rx.exec(msg)){
-    
+
+    if (rxMatch = rx.exec(msg)) {
+
       let command = rxMatch[1]; msg = rxMatch[2];
-      switch(command.toLowerCase()){
-        case "show":
-
-
-        break;
+      switch (command.toLowerCase()) {
+        case "play":
+          break;
       }
-    }else {
+    } else {
       console.error("Command not found!");
     }
 
   }
 }
 
-
 // set up callbacks
-client.on('ready', DiscordReady);
-client.on('message', DiscordMessage);
+DiscordClient.on('ready', DiscordReady).on('message', DiscordMessage);
